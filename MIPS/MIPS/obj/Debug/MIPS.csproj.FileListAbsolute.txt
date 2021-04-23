@@ -1,0 +1,10 @@
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\bin\Debug\MIPS.exe.config
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\bin\Debug\MIPS.exe
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\bin\Debug\MIPS.pdb
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.csprojAssemblyReference.cache
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.Form1.resources
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.Properties.Resources.resources
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.csproj.GenerateResource.cache
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.csproj.CoreCompileInputs.cache
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.exe
+C:\Users\Yasin\Desktop\MIPS\mips\MIPS\MIPS\obj\Debug\MIPS.pdb
