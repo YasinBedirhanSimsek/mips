@@ -1,0 +1,2 @@
+# mips
+CENG3010 CORG 
