@@ -24,9 +24,5 @@ namespace MIPS
             cpu = new CPU(intRegistersGridView, floatRegistersGridView);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-        }
     }
 }

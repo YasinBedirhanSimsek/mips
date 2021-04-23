@@ -17,24 +17,22 @@ namespace MIPS
 
         private string name;
 
-        private string prefix;
-
         private T value;
 
         //Properities
 
-        public string Name { get => "$" + Convert.ToString(id); set => name = value; }
+        public string Register { get => "$" + Convert.ToString(id); set => name = value; }
 
-        public string Prefix { get => prefix; }
+        public string Name { get => name; }
 
         public T Value { get => value; set => this.value = value; }
 
         //Constructor
 
-        public CPU_Register(int id, string prefix, T value)
+        public CPU_Register(int id, string name, T value)
         {
             this.id = id;
-            this.prefix = prefix;
+            this.name = name;
             this.value = value;
         }
 
