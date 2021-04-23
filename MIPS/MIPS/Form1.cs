@@ -14,7 +14,9 @@ namespace MIPS
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+
+
         }
     }
 }
