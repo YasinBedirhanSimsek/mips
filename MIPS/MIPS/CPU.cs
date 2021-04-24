@@ -54,8 +54,8 @@ namespace MIPS
             this.IntegerRegisters.Add(new CPU_Register<int>(6, "a2", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(7, "a3", 0));
 
-            this.IntegerRegisters.Add(new CPU_Register<int>(8,  "t0", 0));
-            this.IntegerRegisters.Add(new CPU_Register<int>(9,  "t1", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(8, "t0", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(9, "t1", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(10, "t2", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(11, "t3", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(12, "t4", 0));
@@ -67,9 +67,10 @@ namespace MIPS
             this.IntegerRegisters.Add(new CPU_Register<int>(17, "s1", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(18, "s2", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(19, "s3", 0));
-            this.IntegerRegisters.Add(new CPU_Register<int>(21, "s4", 0));
-            this.IntegerRegisters.Add(new CPU_Register<int>(22, "s5", 0));
-            this.IntegerRegisters.Add(new CPU_Register<int>(23, "s6", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(20, "s4", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(21, "s5", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(22, "s6", 0));
+            this.IntegerRegisters.Add(new CPU_Register<int>(23, "s7", 0));
 
             this.IntegerRegisters.Add(new CPU_Register<int>(24, "t8", 0));
             this.IntegerRegisters.Add(new CPU_Register<int>(25, "t9", 0));
@@ -91,7 +92,7 @@ namespace MIPS
             this.FloatRegisters.Add(new CPU_Register<float>(5, "f5", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(6, "f6", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(7, "f7", 0));
-            this.FloatRegisters.Add(new CPU_Register<float>(8, "f8", 0)); 
+            this.FloatRegisters.Add(new CPU_Register<float>(8, "f8", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(9, "f9", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(10, "f10", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(11, "f11", 0));
@@ -103,6 +104,7 @@ namespace MIPS
             this.FloatRegisters.Add(new CPU_Register<float>(17, "f17", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(18, "f18", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(19, "f19", 0));
+            this.FloatRegisters.Add(new CPU_Register<float>(20, "f20", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(21, "f21", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(22, "f22", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(23, "f23", 0));
@@ -115,6 +117,26 @@ namespace MIPS
             this.FloatRegisters.Add(new CPU_Register<float>(30, "f30", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(31, "f31", 0));
 
-        }  
+        }
+
+        //Functions
+        public void Reset()
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                IntegerRegisters[i].Value = 0;
+                FloatRegisters[i].Value = 0.0f;
+            }
+        }
+
+        public void Decode(CPU_Instruction instruction)
+        {
+
+        }
+
+        public void Execute()
+        {
+
+        }
     }
 }

@@ -15,14 +15,29 @@ namespace MIPS
     {
         CPU cpu;
 
-        int x = 0;
+        Simulator simulator;
 
         public Form1()
         {            
             InitializeComponent();
 
             cpu = new CPU(intRegistersGridView, floatRegistersGridView);
+
+            simulator = new Simulator(cpu, textEditor);          
         }
 
+        private void btn_sim_nextStep_Click(object sender, EventArgs e)
+        {
+            simulator.NextStep();
+        }
+
+        private void btn_simulate_Click(object sender, EventArgs e)
+        {
+            simulator.Reset();
+
+            btn_sim_nextStep.Enabled = true;
+
+            simulator.Start();
+        }
     }
 }
