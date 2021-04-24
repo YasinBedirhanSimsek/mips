@@ -45,8 +45,6 @@ namespace MIPS
 
             if (step_line_index >= lines.Count)
                 return;
-
-            cpu.Decode(instruction);
         }
     }
 }
