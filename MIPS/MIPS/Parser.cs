@@ -2,56 +2,271 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MIPS
 {
+    //???.add ($s4),$s5,43 ( $a0 ) --> return null
+
+    //add ($s4), $s5, 43 ( $a0 )
+
+    //add ($s4), 3, $t5
+
     class Parser
     {
         public static CPU_Instruction ParseNextInstruction(string line)
         {
-            string line_copy = String.Copy(line); //A copy of the line
+            line.Trim();
 
-            if(line.IndexOf('#') != -1) line = line.Remove(line.IndexOf('#')); //Handle comments
+            if (Char.IsLetter(line[0]) == false && line[0] != '.')
+                return null;
 
-            char[] charsToTrim = { ' ' }; // Delete all empty spaces at the start and at the end of the line
+            CPU_Instruction instruction = new CPU_Instruction(null, null);
 
-            line = line.Trim(charsToTrim);
+            get_instruction_name(ref instruction, ref line);
 
-            string instruction_name;
+            if (instruction == null)
+                return null;
 
-            char[] charsToSplit = { ' ' }; 
+            get_destination_reg(ref instruction, ref line);
 
-            var elements = line.Split(charsToSplit).ToList(); //Split the line into elements after each empty space
+            if (instruction == null)
+                return null;
 
-            if (line[0] != '.') //If not a preprocessor
+            get_operands(ref instruction, ref line);
+
+            if (instruction == null)
+                return null;
+
+            return instruction;
+        }
+
+        private static void get_instruction_name(ref CPU_Instruction instruction, ref string line)
+        {
+            string instruction_name = "";
+
+            for (int i = 0; i < line.Length; i++)
             {
-                //var elements = line.Split(' ').ToList(); //Split the line into elements after each empty space
-
-                if (elements.Count < 2) //Invalid Line Structure
-                    return null;
-
-                instruction_name = String.Copy(elements[0]); //Get the instruction name
-
-                elements.RemoveAt(0);
-
-                string str;
-
-                for(int i = 0; i < elements.Count; i++)
+                if (Char.IsLetter(line[i]))
                 {
-                    str = elements[i];
+                    instruction_name += line[i];
+                }
+                else if (Char.IsWhiteSpace(line[i]))
+                {
+                    instruction.instruction_name = String.Copy(instruction_name);
 
-                    elements.RemoveAt(i);
+                    return;
+                }
+                else
+                {
+                    instruction = null;
 
-                    elements.InsertRange(i, str.Split(','));
+                    return;
+                }
+            }
+        }
+
+        private static void get_destination_reg(ref CPU_Instruction instruction, ref string line)
+        {
+            int dolar_index = line.IndexOf('$');
+
+            if (dolar_index == -1)
+            {
+                instruction = null;
+
+                return;
+            }
+
+            string destination_register_name = "";
+
+            for (int i = dolar_index; i < line.Length; i++)
+            {
+                if (i == dolar_index)
+                {
+                    destination_register_name += "$";
+
+                    continue;
                 }
 
-                elements.RemoveAll(x => System.Text.RegularExpressions.Regex.IsMatch(x, @"^[a-zA-Z0-9$()]+$") == false);
+                if (Char.IsLetterOrDigit(line[i]))
+                {
+                    destination_register_name += line[i];
+                }
+                else if (Char.IsWhiteSpace(line[i]) || line[i] == ',')
+                {
+                    instruction.destinationRegisterName = String.Copy(destination_register_name);
 
+                    return;
+                }
+                else
+                {
+                    instruction = null;
+
+                    return;
+                }
             }
-            else return null;
+        }
 
-            return null;
+        private static void get_operands(ref CPU_Instruction instruction, ref string line)
+        {
+            line = line.Replace(" ", "");
+
+            List<string> elements = line.Split(',').ToList();
+
+            switch (elements.Count())
+            {
+                case 2:
+                    string offset_value = "";
+                    string register = "";
+                    string str = String.Copy(elements[1].ToLower());
+                    bool paranthesis = false;
+                    for (int i = 0; i < str.Length; i++)
+                    {
+                        if (paranthesis)
+                        {
+                            Regex regex = new Regex(@"\$[a-z0-9]+");
+
+                            var matches = regex.Matches(str);
+
+                            if (matches.Count != 1)
+                            {
+                                instruction = null;
+                                return;
+                            }
+                            else
+                            {
+                                register = matches[0].Value;
+                            }
+                        }
+                        else
+                        {
+                            if (Char.IsDigit(str[i]))
+                            {
+                                offset_value += str[i];
+                            }
+                            else if (str[i] == '(')
+                            {
+                                paranthesis = true;
+                            }
+                            else
+                            {
+                                instruction = null;
+                                return;
+                            }
+                        }
+                    }
+
+                    instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Offset, register, Convert.ToInt32(offset_value)));
+
+                    break;
+
+                case 3:
+                    string str2 = String.Copy(elements[1].ToLower());
+                    string str3 = String.Copy(elements[2].ToLower());
+
+                    int dolar_sign_index = 0;
+
+                    //First element in the elements list
+
+                    dolar_sign_index = str2.IndexOf('$');
+
+                    if (dolar_sign_index == -1)
+                    {
+                        Regex regex = new Regex(@"[0-9]");
+
+                        var matches = regex.Matches(str2);
+
+                        if (matches.Count != 1)
+                        {
+                            instruction = null;
+
+                            return;
+                        }
+                        else if (matches[0].Value.Length != str2.Length)
+                        {
+                            instruction = null;
+
+                            return;
+                        }
+                        else
+                        {
+                            instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Immediate, null, Convert.ToInt32(matches[0].Value)));
+                        }
+                    }
+                    else
+                    {
+                        Regex regex = new Regex(@"\$[a-z0-9]+");
+
+                        var matches = regex.Matches(str2);
+
+                        if (matches.Count != 1)
+                        {
+                            instruction = null;
+                            return;
+                        }
+                        else
+                        {
+                            instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Register, matches[0].Value, 0));
+                        }
+                    }
+
+                    //Second element in the elements list
+
+                    dolar_sign_index = str3.IndexOf('$');
+
+                    if (dolar_sign_index == -1)
+                    {
+                        Regex regex = new Regex(@"[0-9]");
+
+                        var matches = regex.Matches(str3);
+
+                        if (matches.Count != 1)
+                        {
+                            instruction = null;
+
+                            return;
+                        }
+                        else if (matches[0].Value.Length != str3.Length)
+                        {
+                            instruction = null;
+
+                            return;
+                        }
+                        else
+                        {
+                            instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Immediate, null, Convert.ToInt32(matches[0].Value)));
+                        }
+                    }
+                    else
+                    {
+                        Regex regex = new Regex(@"\$[a-z0-9]+");
+
+                        var matches = regex.Matches(str3);
+
+                        if (matches.Count != 1)
+                        {
+                            instruction = null;
+                            return;
+                        }
+                        else
+                        {
+                            instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Register, matches[0].Value, 0));
+                        }
+                    }
+                    break;
+
+                default:
+                    instruction = null;
+                    return;
+            }
         }
     }
 }
+//\$[a-z0-9]+ register
+
+//\$[a-zA-Z0-9]* register regex
+
+//[0-9]+\s*\(\s*\$[a-z]+[0-9]+\s*\) offset
+
+//only number (?<![a-z])[0-9]+(?!\()
