@@ -17,14 +17,16 @@ namespace MIPS
 
         private OperandType type;
 
-        private CPU_Register<int> operand_reg;
+        private string operand_reg;
 
         private Int32 operand_int;
 
         private Int32 offset;
         
-        public CPU_Instruction_Operand(OperandType type, CPU_Register<int> operand_reg, int value)
+        public CPU_Instruction_Operand(OperandType type, string operand_reg, int value)
         {
+            this.type = type;
+
             switch (this.type)
             {
                 case OperandType.Register:
@@ -46,39 +48,21 @@ namespace MIPS
                 break;
             }
         }
-
-        public int GetValue()
-        {
-            switch (this.type)
-            {
-                case OperandType.Register:
-                    return this.operand_reg.Value;
-
-                case OperandType.Immediate:
-                    return this.operand_int;
-
-                case OperandType.Offset:
-                    return this.offset + this.operand_reg.Value;
-
-                default:
-                    return 0;
-            }
-        }
     }
 
     class CPU_Instruction
     {
         public string instruction_name;
 
-        public CPU_Register<int> destinationRegister;
+        public string destinationRegisterName;
 
         public List<CPU_Instruction_Operand> operands;
 
-        public CPU_Instruction(string instruction_name, CPU_Register<int> destinationRegister)
+        public CPU_Instruction(string instruction_name, string destinationRegister)
         {
             this.instruction_name = instruction_name;
 
-            this.destinationRegister = destinationRegister;
+            this.destinationRegisterName = destinationRegister;
 
             this.operands = new List<CPU_Instruction_Operand>();
         }
