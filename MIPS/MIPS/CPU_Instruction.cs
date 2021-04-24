@@ -17,11 +17,11 @@ namespace MIPS
 
         private OperandType type;
 
-        private string operand_reg;
+        public string operand_reg;
 
-        private Int32 operand_int;
+        public Int32 operand_int;
 
-        private Int32 offset;
+        public Int32 offset;
         
         public CPU_Instruction_Operand(OperandType type, string operand_reg, int value)
         {

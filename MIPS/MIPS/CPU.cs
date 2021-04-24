@@ -116,7 +116,6 @@ namespace MIPS
             this.FloatRegisters.Add(new CPU_Register<float>(29, "f29", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(30, "f30", 0));
             this.FloatRegisters.Add(new CPU_Register<float>(31, "f31", 0));
-
         }
 
         //Functions
@@ -127,6 +126,30 @@ namespace MIPS
                 IntegerRegisters[i].Value = 0;
                 FloatRegisters[i].Value = 0.0f;
             }
+        }
+
+        public int TakeInstruction(CPU_Instruction instruction)
+        {
+            CPU_Register<int> destination = this.IntegerRegisters.First(x=>x.Name == instruction.destinationRegisterName || x.Register == instruction.destinationRegisterName);
+
+            if (destination == null)
+                return -1;
+
+            CPU_Register<int> operand_1;
+
+            CPU_Register<int> operand_2;
+
+            if(instruction.operands[0].operand_reg != null)
+            {
+                operand_1 = this.IntegerRegisters.First(x => x.Name == instruction.operands[0].operand_reg || x.Register == instruction.operands[0].operand_reg);
+            }
+
+            if (instruction.operands[1].operand_reg != null)
+            {
+                operand_2 = this.IntegerRegisters.First(x => x.Name == instruction.operands[1].operand_reg || x.Register == instruction.operands[1].operand_reg);
+            }
+
+            return 0;
         }
 
         public void Decode(CPU_Instruction instruction)

@@ -23,7 +23,7 @@ namespace MIPS
 
         public string Register { get => "$" + Convert.ToString(id); set => name = value; }
 
-        public string Name { get => name; }
+        public string Name { get => "$" + name; }
 
         public T Value { get => value; set => this.value = value; }
 

@@ -39,6 +39,8 @@ namespace MIPS
             if (instruction == null)
                 return null;
 
+            instruction.destinationRegisterName = instruction.destinationRegisterName.ToLower();
+            instruction.instruction_name = instruction.instruction_name.ToLower();
             return instruction;
         }
 

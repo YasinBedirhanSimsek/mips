@@ -43,10 +43,13 @@ namespace MIPS
 
             CPU_Instruction instruction = Parser.ParseNextInstruction(lines[step_line_index++]);
 
-            if (step_line_index >= lines.Count)
-                return;
+            if(instruction == null || cpu.TakeInstruction(instruction) == -1)
+            {
+                MessageBox.Show("Error At " + (step_line_index).ToString());
+            }
 
-            cpu.Decode(instruction);
+            if (step_line_index >= lines.Count)
+                return;       
         }
     }
 }
