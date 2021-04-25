@@ -117,4 +117,39 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>YASİN BEDİRHAN ŞİMŞEK - MIPS SIMULATOR - KAAN ÖZEN 
+
+Suported Instructions:
+
+add
+
+addi
+
+addiu
+
+and
+
+andi
+
+or
+
+ori
+
+mul (Pseudo-instructions)
+
+muli (Pseudo-instructions)
+
+divi (Pseudo-instructions)
+
+div (Pseudo-instructions)
+
+move (Pseudo-instruction)
+
+sub
+
+lw
+
+sw</value>
+  </data>
 </root>

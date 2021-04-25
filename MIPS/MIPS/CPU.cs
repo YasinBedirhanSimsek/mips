@@ -19,6 +19,10 @@ namespace MIPS
             muli,
             divi,
             div,
+            and,
+            andi,
+            or,
+            ori,
             sub,
             lw,
             sw, 
@@ -257,6 +261,46 @@ namespace MIPS
 
                     break;
 
+                case Instruction_Set.and:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
+                        return false;
+
+                    break;
+
+                case Instruction_Set.andi:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
+                        return false;
+
+                    break;
+
+                case Instruction_Set.or:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
+                        return false;
+
+                    break;
+
+                case Instruction_Set.ori:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
+                        return false;
+
+                    break;
+
                 case Instruction_Set.addi:
 
                     if (single_operand)
@@ -378,6 +422,22 @@ namespace MIPS
 
                 case Instruction_Set.addi:
                     this.IntegerRegisters[target_register_idx].Value = op1 + op2;
+                    break;
+
+                case Instruction_Set.andi:
+                    this.IntegerRegisters[target_register_idx].Value = op1 & op2;
+                    break;
+
+                case Instruction_Set.and:
+                    this.IntegerRegisters[target_register_idx].Value = op1 & op2;
+                    break;
+
+                case Instruction_Set.or:
+                    this.IntegerRegisters[target_register_idx].Value = op1 | op2;
+                    break;
+
+                case Instruction_Set.ori:
+                    this.IntegerRegisters[target_register_idx].Value = op1 | op2;
                     break;
 
                 case Instruction_Set.mul:

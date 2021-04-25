@@ -21,6 +21,9 @@ namespace MIPS
         {            
             InitializeComponent();
 
+            richTextBox1.Select(0, richTextBox1.Text.Length);
+            richTextBox1.SelectionAlignment = HorizontalAlignment.Center;
+
             cpu = new CPU(intRegistersGridView, floatRegistersGridView, memoryDataGridView);
 
             simulator = new Simulator(cpu, textEditor);          
