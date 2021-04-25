@@ -43,5 +43,12 @@ namespace MIPS
             this.FloatRegistersDataGridView.DataSource = cpu.FloatRegisters;
         }    
 
+        public void Update()
+        {
+            this.cpu.IntegerRegisters.Add(new CPU_Register<int>(0,"",0));
+            this.cpu.IntegerRegisters.RemoveAt(cpu.IntegerRegisters.Count() - 1);
+            this.IntegerRegistersDataGridView.Refresh();
+        }
+
     }
 }

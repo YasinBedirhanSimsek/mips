@@ -15,9 +15,9 @@ namespace MIPS
 
     class Parser
     {
-        public static CPU_Instruction ParseNextInstruction(string line)
+        public static CPU_Instruction Fetch(string line)
         {
-            line.Trim();
+            line = line.Trim();
 
             if (Char.IsLetter(line[0]) == false && line[0] != '.')
                 return null;
@@ -160,6 +160,7 @@ namespace MIPS
                     }
 
                     instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Offset, register, Convert.ToInt32(offset_value)));
+                    instruction.instructionType = CPU_Instruction.InstructionType.Memory;
 
                     break;
 
@@ -175,7 +176,7 @@ namespace MIPS
 
                     if (dolar_sign_index == -1)
                     {
-                        Regex regex = new Regex(@"[0-9]");
+                        Regex regex = new Regex(@"\-?[0-9]");
 
                         var matches = regex.Matches(str2);
 
@@ -194,6 +195,7 @@ namespace MIPS
                         else
                         {
                             instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Immediate, null, Convert.ToInt32(matches[0].Value)));
+                            instruction.instructionType = CPU_Instruction.InstructionType.Immidiate;
                         }
                     }
                     else
@@ -210,6 +212,8 @@ namespace MIPS
                         else
                         {
                             instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Register, matches[0].Value, 0));
+                            instruction.instructionType = instruction.instructionType == CPU_Instruction.InstructionType.Immidiate ? instruction.instructionType : CPU_Instruction.InstructionType.Register;
+
                         }
                     }
 
@@ -219,7 +223,7 @@ namespace MIPS
 
                     if (dolar_sign_index == -1)
                     {
-                        Regex regex = new Regex(@"[0-9]");
+                        Regex regex = new Regex(@"\-?[0-9]");
 
                         var matches = regex.Matches(str3);
 
@@ -238,6 +242,7 @@ namespace MIPS
                         else
                         {
                             instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Immediate, null, Convert.ToInt32(matches[0].Value)));
+                            instruction.instructionType = CPU_Instruction.InstructionType.Immidiate;
                         }
                     }
                     else
@@ -254,6 +259,7 @@ namespace MIPS
                         else
                         {
                             instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Register, matches[0].Value, 0));
+                            instruction.instructionType = instruction.instructionType == CPU_Instruction.InstructionType.Immidiate ? instruction.instructionType : CPU_Instruction.InstructionType.Register;
                         }
                     }
                     break;

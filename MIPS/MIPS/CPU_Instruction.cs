@@ -15,7 +15,7 @@ namespace MIPS
             Offset
         }
 
-        private OperandType type;
+        public OperandType type;
 
         public string operand_reg;
 
@@ -52,11 +52,20 @@ namespace MIPS
 
     class CPU_Instruction
     {
+        public enum InstructionType
+        {
+            Register,
+            Immidiate,
+            Memory
+        }
+
         public string instruction_name;
 
         public string destinationRegisterName;
 
         public List<CPU_Instruction_Operand> operands;
+
+        public InstructionType instructionType;
 
         public CPU_Instruction(string instruction_name, string destinationRegister)
         {

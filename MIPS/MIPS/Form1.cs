@@ -29,6 +29,8 @@ namespace MIPS
         private void btn_sim_nextStep_Click(object sender, EventArgs e)
         {
             simulator.NextStep();
+
+            cpu.UI_Manager.Update();
         }
 
         private void btn_simulate_Click(object sender, EventArgs e)
