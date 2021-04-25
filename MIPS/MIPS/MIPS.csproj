@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CPU.cs" />
     <Compile Include="CPU_Instruction.cs" />
+    <Compile Include="CPU_MemoryCell.cs" />
     <Compile Include="CPU_UI_Manager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

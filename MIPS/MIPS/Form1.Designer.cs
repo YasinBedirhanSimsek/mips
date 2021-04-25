@@ -29,10 +29,11 @@ namespace MIPS
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.EditorTab = new System.Windows.Forms.TabPage();
             this.btn_simulate = new System.Windows.Forms.Button();
@@ -42,12 +43,17 @@ namespace MIPS
             this.panel1 = new System.Windows.Forms.Panel();
             this.floatRegistersGridView = new System.Windows.Forms.DataGridView();
             this.intRegistersGridView = new System.Windows.Forms.DataGridView();
+            this.MemoryTab = new System.Windows.Forms.TabPage();
+            this.memoryDataGridView = new System.Windows.Forms.DataGridView();
+            this.readMe = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.EditorTab.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.floatRegistersGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.intRegistersGridView)).BeginInit();
+            this.MemoryTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.memoryDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -56,6 +62,8 @@ namespace MIPS
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.EditorTab);
+            this.tabControl1.Controls.Add(this.MemoryTab);
+            this.tabControl1.Controls.Add(this.readMe);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -143,14 +151,14 @@ namespace MIPS
             this.floatRegistersGridView.AllowUserToResizeRows = false;
             this.floatRegistersGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.floatRegistersGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Chartreuse;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.floatRegistersGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Chartreuse;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.floatRegistersGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.floatRegistersGridView.Location = new System.Drawing.Point(10, 397);
             this.floatRegistersGridView.Margin = new System.Windows.Forms.Padding(10);
             this.floatRegistersGridView.Name = "floatRegistersGridView";
@@ -162,33 +170,72 @@ namespace MIPS
             // 
             this.intRegistersGridView.AllowUserToResizeRows = false;
             this.intRegistersGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.intRegistersGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.intRegistersGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Chartreuse;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.intRegistersGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.intRegistersGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.intRegistersGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Chartreuse;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.intRegistersGridView.DefaultCellStyle = dataGridViewCellStyle4;
             this.intRegistersGridView.GridColor = System.Drawing.SystemColors.ActiveCaption;
             this.intRegistersGridView.Location = new System.Drawing.Point(10, 13);
             this.intRegistersGridView.Margin = new System.Windows.Forms.Padding(10);
             this.intRegistersGridView.Name = "intRegistersGridView";
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Chartreuse;
-            this.intRegistersGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Chartreuse;
+            this.intRegistersGridView.RowsDefaultCellStyle = dataGridViewCellStyle5;
             this.intRegistersGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.intRegistersGridView.Size = new System.Drawing.Size(447, 364);
             this.intRegistersGridView.TabIndex = 0;
+            // 
+            // MemoryTab
+            // 
+            this.MemoryTab.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.MemoryTab.Controls.Add(this.memoryDataGridView);
+            this.MemoryTab.Location = new System.Drawing.Point(4, 22);
+            this.MemoryTab.Name = "MemoryTab";
+            this.MemoryTab.Size = new System.Drawing.Size(957, 760);
+            this.MemoryTab.TabIndex = 1;
+            this.MemoryTab.Text = "Memory";
+            // 
+            // memoryDataGridView
+            // 
+            this.memoryDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.memoryDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Chartreuse;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.memoryDataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            this.memoryDataGridView.Location = new System.Drawing.Point(10, 14);
+            this.memoryDataGridView.Margin = new System.Windows.Forms.Padding(10);
+            this.memoryDataGridView.Name = "memoryDataGridView";
+            this.memoryDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.memoryDataGridView.Size = new System.Drawing.Size(937, 498);
+            this.memoryDataGridView.TabIndex = 0;
+            // 
+            // readMe
+            // 
+            this.readMe.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.readMe.ForeColor = System.Drawing.SystemColors.Control;
+            this.readMe.Location = new System.Drawing.Point(4, 22);
+            this.readMe.Name = "readMe";
+            this.readMe.Size = new System.Drawing.Size(957, 760);
+            this.readMe.TabIndex = 2;
+            this.readMe.Text = "README";
             // 
             // Form1
             // 
@@ -206,6 +253,8 @@ namespace MIPS
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.floatRegistersGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.intRegistersGridView)).EndInit();
+            this.MemoryTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.memoryDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -221,6 +270,9 @@ namespace MIPS
         private System.Windows.Forms.DataGridView floatRegistersGridView;
         private System.Windows.Forms.Button btn_sim_nextStep;
         private System.Windows.Forms.Button btn_simulate;
+        private System.Windows.Forms.TabPage MemoryTab;
+        private System.Windows.Forms.DataGridView memoryDataGridView;
+        private System.Windows.Forms.TabPage readMe;
     }
 }
 

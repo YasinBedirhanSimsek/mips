@@ -21,7 +21,7 @@ namespace MIPS
         {            
             InitializeComponent();
 
-            cpu = new CPU(intRegistersGridView, floatRegistersGridView);
+            cpu = new CPU(intRegistersGridView, floatRegistersGridView, memoryDataGridView);
 
             simulator = new Simulator(cpu, textEditor);          
         }

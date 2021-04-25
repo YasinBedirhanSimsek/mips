@@ -116,6 +116,31 @@ namespace MIPS
 
             List<string> elements = line.Split(',').ToList();
 
+            if(instruction.instruction_name == "move")
+            {
+                string str = String.Copy(elements[1].ToLower()); ;
+
+                //First element in the elements list
+
+                Regex regex = new Regex(@"\$[a-z0-9]+");
+
+                var matches = regex.Matches(str);
+
+                if (matches.Count != 1)
+                {
+                    instruction = null;
+                    return;
+                }
+                else
+                {
+                    instruction.operands.Add(new CPU_Instruction_Operand(CPU_Instruction_Operand.OperandType.Register, matches[0].Value, 0));
+                    instruction.instructionType = instruction.instructionType == CPU_Instruction.InstructionType.Immidiate ? instruction.instructionType : CPU_Instruction.InstructionType.Register;
+
+                }
+
+                return;
+            }
+
             switch (elements.Count())
             {
                 case 2:

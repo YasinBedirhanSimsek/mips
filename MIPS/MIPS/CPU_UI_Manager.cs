@@ -18,11 +18,13 @@ namespace MIPS
 
         public System.Windows.Forms.DataGridView FloatRegistersDataGridView;
 
+        public System.Windows.Forms.DataGridView MemoryRegistersDataGridView;
+
         public CPU cpu;
 
         //Constructor
 
-        public CPU_UI_Manager(CPU cpu, System.Windows.Forms.DataGridView grid_int, System.Windows.Forms.DataGridView grid_float)
+        public CPU_UI_Manager(CPU cpu, System.Windows.Forms.DataGridView grid_int, System.Windows.Forms.DataGridView grid_float, System.Windows.Forms.DataGridView grid_memory)
         {
             //Bind UI_Manager and CPU to Each Other
 
@@ -36,11 +38,15 @@ namespace MIPS
 
             this.FloatRegistersDataGridView = grid_float;
 
+            this.MemoryRegistersDataGridView = grid_memory;
+
             //Bind UI_Manager DataGridViews' DataSources to CPU Register Lists
 
             this.IntegerRegistersDataGridView.DataSource = cpu.IntegerRegisters;
 
             this.FloatRegistersDataGridView.DataSource = cpu.FloatRegisters;
+
+            this.MemoryRegistersDataGridView.DataSource = cpu.Memory;
         }    
 
         public void Update()
@@ -48,6 +54,8 @@ namespace MIPS
             this.cpu.IntegerRegisters.Add(new CPU_Register<int>(0,"",0));
             this.cpu.IntegerRegisters.RemoveAt(cpu.IntegerRegisters.Count() - 1);
             this.IntegerRegistersDataGridView.Refresh();
+
+            this.MemoryRegistersDataGridView.Refresh();
         }
 
     }

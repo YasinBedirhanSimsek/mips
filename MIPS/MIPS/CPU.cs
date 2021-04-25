@@ -15,6 +15,10 @@ namespace MIPS
             add,
             addi,
             addiu,
+            mul,
+            muli,
+            divi,
+            div,
             sub,
             lw,
             sw, 
@@ -38,13 +42,15 @@ namespace MIPS
 
         public BindingList<CPU_Register<float>> FloatRegisters;
 
+        public BindingList<CPU_MemoryCell> Memory;
+
         //CPU - UI Manager
 
         public CPU_UI_Manager UI_Manager;
 
         // Constructors
 
-        public CPU(System.Windows.Forms.DataGridView grid_int, System.Windows.Forms.DataGridView grid_float)
+        public CPU(System.Windows.Forms.DataGridView grid_int, System.Windows.Forms.DataGridView grid_float, System.Windows.Forms.DataGridView grid_memory)
         {
             //Register Lists
 
@@ -52,13 +58,32 @@ namespace MIPS
 
             this.FloatRegisters = new BindingList<CPU_Register<float>>();
 
+            this.Memory = new BindingList<CPU_MemoryCell>();
+
+            //Create Memory
+
+            CreateMemory();
+
             //Create Registers
 
             CreateRegisters();
 
             //Create UI Manager
 
-            this.UI_Manager = new CPU_UI_Manager(this, grid_int, grid_float);
+            this.UI_Manager = new CPU_UI_Manager(this, grid_int, grid_float, grid_memory);
+        }
+
+        // Create Memory
+        private void CreateMemory()
+        {
+            int adr = 0;
+
+            for(int x = 0; x < 64; x++ )
+            {
+                this.Memory.Add(new CPU_MemoryCell(0, adr));
+                adr += 4;
+            }
+
         }
 
         // Create Registers
@@ -171,6 +196,9 @@ namespace MIPS
 
                 op1 = this.IntegerRegisters[op_reg1_idx].Value + instruction.operands[0].offset;
 
+                if (instruction.instruction_name == "move")
+                    op1 = this.IntegerRegisters[op_reg1_idx].Value;
+
                 single_operand = true;
             }
             else
@@ -259,6 +287,47 @@ namespace MIPS
 
                     break;
 
+                case Instruction_Set.mul:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
+                        return false;
+
+                break;
+
+                case Instruction_Set.div:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
+                        return false;
+
+                break;
+
+                case Instruction_Set.muli:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
+                        return false;
+
+                break;
+
+                case Instruction_Set.divi:
+
+                    if (single_operand)
+                        return false;
+
+                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
+                        return false;
+
+                break;
+
+
                 case Instruction_Set.lw:
 
                     if (single_operand == false)
@@ -311,6 +380,22 @@ namespace MIPS
                     this.IntegerRegisters[target_register_idx].Value = op1 + op2;
                     break;
 
+                case Instruction_Set.mul:
+                    this.IntegerRegisters[target_register_idx].Value = op1 * op2;
+                    break;
+
+                case Instruction_Set.div:
+                    this.IntegerRegisters[target_register_idx].Value = (int)(op1 / op2);
+                    break;
+
+                case Instruction_Set.muli:
+                    this.IntegerRegisters[target_register_idx].Value = op1 * op2;
+                    break;
+
+                case Instruction_Set.divi:
+                    this.IntegerRegisters[target_register_idx].Value = (int)(op1 / op2);
+                    break;
+
                 case Instruction_Set.addiu:
                     this.IntegerRegisters[target_register_idx].Value = (int)((uint)((uint)op1 + (uint)op2));
                     break;
@@ -320,13 +405,15 @@ namespace MIPS
                     break;
 
                 case Instruction_Set.lw:
+                    this.IntegerRegisters[target_register_idx].Value = Memory[op1/4].Value;
                     break;
 
                 case Instruction_Set.sw:
+                    Memory[op1 / 4].Value = this.IntegerRegisters[target_register_idx].Value;
                     break;
 
                 case Instruction_Set.move:
-
+                    this.IntegerRegisters[target_register_idx].Value = 0 + op1;
                     break;
  
                 default:
