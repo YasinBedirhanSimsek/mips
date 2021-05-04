@@ -60,6 +60,22 @@ namespace MIPS
 
                     return;
                 }
+                else if(line[i] == '.')
+                {
+                    if (i+1 < line.Length)
+                    {
+                        if(line[i+1] == 's')
+                        {
+                           instruction.instruction_name = String.Copy(instruction_name + ".s");
+
+                           return;
+                        }
+                    }
+
+                    instruction = null;
+
+                    return;
+                }
                 else
                 {
                     instruction = null;
