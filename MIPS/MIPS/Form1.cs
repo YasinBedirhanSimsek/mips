@@ -13,7 +13,6 @@ namespace MIPS
 {
     public partial class Form1 : Form
     {
-        CPU cpu;
 
         Simulator simulator;
 
@@ -24,25 +23,22 @@ namespace MIPS
             richTextBox1.Select(0, richTextBox1.Text.Length);
             richTextBox1.SelectionAlignment = HorizontalAlignment.Center;
 
-            cpu = new CPU(intRegistersGridView, floatRegistersGridView, memoryDataGridView);
-
-            simulator = new Simulator(cpu, textEditor);          
+            this.simulator = new Simulator(intRegistersGridView, floatRegistersGridView, memoryDataGridView, textEditor, ParsedInstructionList);
         }
 
         private void btn_sim_nextStep_Click(object sender, EventArgs e)
         {
             simulator.NextStep();
-
-            cpu.UI_Manager.Update();
         }
 
         private void btn_simulate_Click(object sender, EventArgs e)
         {
             simulator.Reset();
 
-            btn_sim_nextStep.Enabled = true;
-
-            simulator.Start();
+            if (simulator.Start() == 0)
+            {
+                btn_sim_nextStep.Enabled = true;
+            };
         }
     }
 }

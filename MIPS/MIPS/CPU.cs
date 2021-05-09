@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//Instruction_Set matched_inst = (Instruction_Set)Enum.Parse(typeof(Instruction_Set), instruction.instruction_name);
+
 namespace MIPS
 {
     class CPU
@@ -30,23 +32,21 @@ namespace MIPS
             INVALID
         }
 
-        /*public struct ExecutionObject
-        {
-            public Instruction_Set instruction;
-            public CPU_Register<int> target_register;
-            public int operand_1;
-            public int operand_2;
-            public bool single_operand;
-            public bool object_valid;
-        }*/
-
         //Register Lists
+
+        public List<CPU_Instruction> CPU_Program;
 
         public BindingList<CPU_Register<int>> IntegerRegisters;
 
         public BindingList<CPU_Register<float>> FloatRegisters;
 
         public BindingList<CPU_MemoryCell> Memory;
+
+        private int PC;
+
+        //Operation Flags
+
+        public bool N, Z, C, V;
 
         //CPU - UI Manager
 
@@ -75,6 +75,10 @@ namespace MIPS
             //Create UI Manager
 
             this.UI_Manager = new CPU_UI_Manager(this, grid_int, grid_float, grid_memory);
+
+            //Program Counter
+
+            this.PC = 0;
         }
 
         // Create Memory
@@ -171,73 +175,79 @@ namespace MIPS
         }
 
         //Functions
+
         public void Reset()
         {
             for (int i = 0; i < 32; i++)
             {
                 IntegerRegisters[i].Value = 0;
-                FloatRegisters[i].Value = 0.0f;                
+                FloatRegisters[i].Value = 0.0f;
+                Memory[i].Value = 0;
             }
+
+            PC = 0;
+
+            N = false;
+            Z = false;
+            C = false;
+            V = false;
         }
 
-        public int Decode(CPU_Instruction instruction)
+        public int Tick()
         {
-            int op1 = 0, op2 = 0, target_reg_search_idx = 0, op_reg1_idx = 0, op_reg2_idx = 0;
+            CPU_Instruction instruction = Fetch();
 
-            bool single_operand = false;
+            if (instruction == null) return 1;
 
-            target_reg_search_idx = MatchIntegerRegister(instruction.destinationRegisterName);
-
-            if (target_reg_search_idx == -1)
-                return -1;            
-
-            if(instruction.operands.Count() == 1)
+            if(instruction.name.EndsWith(".s"))
             {
-                op_reg1_idx = MatchIntegerRegister(instruction.operands[0].operand_reg);
-
-                if (op_reg1_idx == -1)
-                    return -1;
-
-                op1 = this.IntegerRegisters[op_reg1_idx].Value + instruction.operands[0].offset;
-
-                if (instruction.instruction_name == "move")
-                    op1 = this.IntegerRegisters[op_reg1_idx].Value;
-
-                single_operand = true;
+                Decode<float>(instruction);
             }
             else
             {
-                if (instruction.operands[0].type == CPU_Instruction_Operand.OperandType.Register)
-                {
-                    op_reg1_idx = MatchIntegerRegister(instruction.operands[0].operand_reg);
+                Decode<int>(instruction);
+            }        
 
-                    if (op_reg1_idx == -1)
-                        return -1;
+            return 0;
+        }
 
-                    op1 = this.IntegerRegisters[op_reg1_idx].Value;
-                }
-                else op1 = instruction.operands[0].operand_int;
+        private CPU_Instruction Fetch()
+        {
+            return CPU_Program[PC].instruction_type != Instruction_Type.Invalid ? CPU_Program[PC] : null;
+        }
 
-                if (instruction.operands[1].type == CPU_Instruction_Operand.OperandType.Register)
-                {
-                    op_reg2_idx = MatchIntegerRegister(instruction.operands[1].operand_reg);
-
-                    if (op_reg2_idx == -1)
-                        return -1;
-
-                    op2 = this.IntegerRegisters[op_reg2_idx].Value;
-                }
-                else op2 = instruction.operands[1].operand_int;
-            }
-
+        private int Decode<T>(CPU_Instruction instruction)
+        {
             try
             {
-                Instruction_Set matched_inst = (Instruction_Set)Enum.Parse(typeof(Instruction_Set), instruction.instruction_name);
+                Instruction_Set matched_inst = (Instruction_Set)Enum.Parse(typeof(Instruction_Set), instruction.name);
 
-                if (Verify_Match(instruction, target_reg_search_idx, matched_inst, op1, op2, single_operand) == false)
-                    return -1;
+                switch (instruction)
+                {
+                    case CPU_Instruction_R ins_r:
+                            
+                        break;
 
-                Execute(target_reg_search_idx, matched_inst, op1, op2, single_operand);
+                    case CPU_Instruction_I ins_i:
+                           
+                        break;
+
+                    case CPU_Instruction_I_Branch ins_i_branch:
+                           
+                        break;
+
+                    case CPU_Instruction_I_DataTransfer ins_i_data:
+                           
+                        break;
+
+                    case CPU_Instruction_J ins_j:
+                            
+                        break;
+
+                    case CPU_Instruction_J_Register ins_j_reg:
+                            
+                        break;
+                }
 
                 return 0;
             }
@@ -247,238 +257,40 @@ namespace MIPS
             }
         }
 
-        private bool Verify_Match(CPU_Instruction instruction, int target_reg_search_idx, Instruction_Set matched_inst, int op1, int op2, bool single_operand)
+        //R 
+        private void Execute<T>(Instruction_Set instructionName, CPU_Register<T> destination_reg, CPU_Register<T> op_reg_1, CPU_Register<T> op_reg_2)
         {
-            switch (matched_inst)
-            {
-                case Instruction_Set.add:
 
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.and:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.andi:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.or:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.ori:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.addi:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.addiu:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.sub:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.mul:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                break;
-
-                case Instruction_Set.div:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                break;
-
-                case Instruction_Set.muli:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                break;
-
-                case Instruction_Set.divi:
-
-                    if (single_operand)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Immidiate)
-                        return false;
-
-                break;
-
-
-                case Instruction_Set.lw:
-
-                    if (single_operand == false)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Memory)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.sw:
-
-                    if (single_operand == false)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Memory)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.move:
-
-                    if (single_operand == false)
-                        return false;
-
-                    if (instruction.instructionType != CPU_Instruction.InstructionType.Register)
-                        return false;
-
-                    break;
-
-                case Instruction_Set.INVALID:
-                        return false;
-
-                default:
-                    return false;
-            }
-
-            return true;
         }
 
-        public void Execute(int target_register_idx, Instruction_Set instruction, int op1, int op2, bool single_operand)
+        //I
+        private void Execute<T>(Instruction_Set instructionName, CPU_Register<T> destination_reg, CPU_Register<T> op_reg, T imm)
         {
-            switch (instruction)
-            {
-                case Instruction_Set.add:
-                    this.IntegerRegisters[target_register_idx].Value = op1 + op2;
-                    break;
 
-                case Instruction_Set.addi:
-                    this.IntegerRegisters[target_register_idx].Value = op1 + op2;
-                    break;
+        }
 
-                case Instruction_Set.andi:
-                    this.IntegerRegisters[target_register_idx].Value = op1 & op2;
-                    break;
+        //I-Branch
+        private void Execute<T>(Instruction_Set instructionName, CPU_Register<T> destination_reg, CPU_Register<T> op_reg, int new_pc_value)
+        {
 
-                case Instruction_Set.and:
-                    this.IntegerRegisters[target_register_idx].Value = op1 & op2;
-                    break;
+        }
 
-                case Instruction_Set.or:
-                    this.IntegerRegisters[target_register_idx].Value = op1 | op2;
-                    break;
+        //I-Data
+        private void Execute<T>(Instruction_Set instructionName, CPU_Register<int> destination_reg, int offset)
+        {
 
-                case Instruction_Set.ori:
-                    this.IntegerRegisters[target_register_idx].Value = op1 | op2;
-                    break;
+        }
 
-                case Instruction_Set.mul:
-                    this.IntegerRegisters[target_register_idx].Value = op1 * op2;
-                    break;
+        //J
+        private void Execute<T>(Instruction_Set instructionName, int new_pc_value)
+        {
 
-                case Instruction_Set.div:
-                    this.IntegerRegisters[target_register_idx].Value = (int)(op1 / op2);
-                    break;
+        }
 
-                case Instruction_Set.muli:
-                    this.IntegerRegisters[target_register_idx].Value = op1 * op2;
-                    break;
+        //J-R
+        private void Execute<T>(Instruction_Set instructionName, CPU_Register<int> pc_reg)
+        {
 
-                case Instruction_Set.divi:
-                    this.IntegerRegisters[target_register_idx].Value = (int)(op1 / op2);
-                    break;
-
-                case Instruction_Set.addiu:
-                    this.IntegerRegisters[target_register_idx].Value = (int)((uint)((uint)op1 + (uint)op2));
-                    break;
-
-                case Instruction_Set.sub:
-                    this.IntegerRegisters[target_register_idx].Value = op1 - op2;
-                    break;
-
-                case Instruction_Set.lw:
-                    this.IntegerRegisters[target_register_idx].Value = Memory[op1/4].Value;
-                    break;
-
-                case Instruction_Set.sw:
-                    Memory[op1 / 4].Value = this.IntegerRegisters[target_register_idx].Value;
-                    break;
-
-                case Instruction_Set.move:
-                    this.IntegerRegisters[target_register_idx].Value = 0 + op1;
-                    break;
- 
-                default:
-                    break;
-            }
         }
 
         private int MatchIntegerRegister(string name)
@@ -490,152 +302,17 @@ namespace MIPS
             }
 
             return -1;
+        }
+
+        private int MatchFloatingPointRegister(string name)
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                if (this.FloatRegisters[i].Name == name || this.FloatRegisters[i].Register == name)
+                    return i;
+            }
+
+            return -1;
         }      
-
-        /*
-   public void Execute(CPU_Register<float> target_register, CPU_Register<float> op1, CPU_Register<float> op2)
-   {
-
-   }
-
-   public void Execute(CPU_Register<float> target_register, CPU_Register<float> op1, float op2)
-   {
-
-   }
-
-   public void Execute(CPU_Register<float> target_register, int address)
-   {
-
-   }*/
-
-        /*public int TakeInstruction(CPU_Instruction instruction)
-        {
-            CPU_Register<int> operand_reg1 = null, operand_reg2 = null;
-
-            ExecutionObject executionObject;
-
-            switch (instruction.operands.Count())
-            {
-                case 2:
-                    operand_reg1 = MatchRegister(instruction.operands[0].operand_reg);
-
-                    if (operand_reg1 == null)
-                        return -1;
-
-                    executionObject = Decode(instruction, operand_reg1, operand_reg2);
-
-                    if (executionObject.object_valid)
-                    {
-                        this.Execute(executionObject);
-
-                        return 0;
-                    }
-                    else return - 1;
-
-                case 3:
-
-                    if(instruction.operands[0].type == CPU_Instruction_Operand.OperandType.Register)
-                    {
-                        operand_reg1 = MatchRegister(instruction.operands[0].operand_reg);
-
-                        if (operand_reg1 == null)
-                            return -1;
-                    }
-
-                    if (instruction.operands[1].type == CPU_Instruction_Operand.OperandType.Register)
-                    {
-                        operand_reg2 = MatchRegister(instruction.operands[1].operand_reg);
-
-                        if (operand_reg2 == null)
-                            return -1;                        
-                    }
-
-                    executionObject = Decode(instruction, operand_reg1, operand_reg2);
-
-                    if (executionObject.object_valid)
-                    {
-                        this.Execute(executionObject);
-
-                        return 0;
-                    }
-                    else return -1;
-
-                default:
-                    return -1;
-            }
-        }
-
-        public ExecutionObject Decode(CPU_Instruction instruction, CPU_Register<int> operand_1_reg , CPU_Register<int> operand_2_reg)
-        {
-            ExecutionObject executionObject = new ExecutionObject();
-
-            executionObject.object_valid = false;
-
-            executionObject.instruction = MatchInstruction(instruction.instruction_name);
-
-            if(executionObject.instruction == Instruction_Set.INVALID)
-                return executionObject;
-
-            executionObject.target_register = MatchRegister(instruction.destinationRegisterName);
-
-            if (executionObject.target_register == null)
-                return executionObject;
-
-            executionObject.single_operand = instruction.operands.Count() == 2;
-
-            if (executionObject.single_operand)
-            {
-                executionObject.operand_1 = operand_1_reg.Value + instruction.operands[0].offset;
-            }
-            else
-            {
-                executionObject.operand_1 = (operand_1_reg != null) ? operand_1_reg.Value:instruction.operands[0].operand_int;
-
-                executionObject.operand_2 = (operand_2_reg != null) ? operand_2_reg.Value : instruction.operands[1].operand_int;
-            }
-
-            executionObject.object_valid = true;
-
-            return executionObject;
-        }
-
-        public void Execute(ExecutionObject executionObject)
-        {
-            switch (executionObject.instruction)
-            {
-                case Instruction_Set.add:
-                    executionObject.target_register.Value = executionObject.operand_1 + executionObject.operand_2;
-                    break;
-
-                case Instruction_Set.addi:
-                    break;
-
-                case Instruction_Set.sub:
-                    break;
-
-                case Instruction_Set.lw:
-                    break;
-
-                case Instruction_Set.sw:
-                    break;
-
-                case Instruction_Set.move:
-                    break;
-
-                case Instruction_Set.INVALID:
-                    return;
-            }
-        }
-
-        private CPU_Register<int> MatchRegister(string name)
-        {
-            return this.IntegerRegisters.First(x => x.Name == name || x.Register == name);
-        }
-
-        private Instruction_Set MatchInstruction(string inst_name)
-        {
-            return Instruction_Set.INVALID;
-        }*/
-
     }
 }
